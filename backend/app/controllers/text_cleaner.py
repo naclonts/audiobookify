@@ -1,40 +1,91 @@
 # backend/app/controllers/text_cleaner.py
 
 import re
+import unicodedata
 
-def clean_text(raw_text):
+def normalize_text(text):
     """
-    Cleans the extracted text by removing headers/footers,
-    fixing hyphenated words, and general text cleanup.
-
-    Args:
-        raw_text (str): The raw text extracted from the PDF.
-
-    Returns:
-        str: The cleaned text.
+    Normalize special characters in the text to ensure consistent processing.
     """
-    try:
-        # Remove headers and footers using regex
-        # This is a simplistic approach; may need adjustment based on PDF structure
-        lines = raw_text.split('\n')
-        cleaned_lines = []
-        header_footer_pattern = re.compile(r'^\s*(Page\s+\d+|Chapter\s+\d+|.*)\s*$')  # Example patterns
+    # Unicode Normalization
+    text = unicodedata.normalize('NFKC', text)
 
-        for line in lines:
-            if not header_footer_pattern.match(line):
-                cleaned_lines.append(line)
+    # Define a mapping of special characters to their replacements using regex patterns
+    replacements = {
+        r'[‘’‚‛]': "'",
+        r'[“”„‟]': '"',
+        r'\s[-—―–−]\s': ', ',
+        r'…': '...',
+        r'•': '-',
+        r'[‹›«»]': '"',
+        r'[-—―−–-]': ' ',
+    }
 
-        cleaned_text = '\n'.join(cleaned_lines)
+    # Apply the replacements
+    for pattern, repl in replacements.items():
+        text = re.sub(pattern, repl, text)
 
-        # Fix hyphenated words at line breaks
-        cleaned_text = re.sub(r'(\w+)-\n(\w+)', r'\1\2', cleaned_text)
+    # Replace non-ASCII characters with a space
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
 
-        # Replace multiple newlines with a single newline
-        cleaned_text = re.sub(r'\n\s*\n', '\n\n', cleaned_text)
+    # Remove extra whitespace and trim
+    text = re.sub(r'\s+', ' ', text).strip()
 
-        # Additional cleanup can be added here (e.g., removing extra spaces)
-        cleaned_text = re.sub(r' +', ' ', cleaned_text)
+    return text
 
-        return cleaned_text.strip()
-    except Exception as e:
-        raise RuntimeError(f"Failed to clean text: {e}")
+def split_text(text, max_length=598):
+    """
+    Split the text into chunks where each chunk contains multiple sentences
+    without exceeding the max_length.
+    """
+    # Normalize the text
+    text = normalize_text(text)
+
+    # Split the text into sentences
+    sentence_endings = re.compile(r'(?<=[.!?])\s+')
+    sentences = sentence_endings.split(text)
+
+    chunks = []
+    current_chunk = ''
+
+    for sentence in sentences:
+        sentence = sentence.strip()
+        if not sentence:
+            continue
+
+        # Ensure the sentence ends with appropriate punctuation
+        if not sentence.endswith(('.', '!', '?')):
+            sentence += '.'
+
+        # Check if adding the sentence exceeds the max_length
+        if len(current_chunk) + len(sentence) + 1 <= max_length:
+            current_chunk += (' ' if current_chunk else '') + sentence
+        else:
+            if current_chunk:
+                chunks.append(current_chunk + ' ')
+                current_chunk = ''
+
+            if len(sentence) <= max_length:
+                current_chunk = sentence
+            else:
+                # Split the long sentence into words
+                words = sentence.split()
+                word_chunk = ''
+
+                for word in words:
+                    if len(word_chunk) + len(word) + 1 > max_length:
+                        if word_chunk:
+                            chunks.append(word_chunk + ' ')
+                        word_chunk = word
+                    else:
+                        word_chunk += (' ' if word_chunk else '') + word
+
+                if word_chunk:
+                    if not word_chunk.endswith(('.', '!', '?')):
+                        word_chunk += '.'
+                    current_chunk = word_chunk
+
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks

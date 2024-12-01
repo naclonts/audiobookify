@@ -153,8 +153,7 @@ def generate_audio(texts, output_file="output.wav"):
 
 # Example large text
 large_text = """
-Anyone trying to work out what they think about accelerationism better do so quickly. That’s the nature of the thing. It was already caught up with trends that seemed too fast to track when it began to become self-aware, decades ago. It has picked up a lot of speed since then.
-... Yet if you fumble the question it poses – because rushed – you lose, perhaps very badly. It’s hard.
+Motivated by the success of T5 (Text-To-Text Transfer Transformer) in pre-trained natural language processing models, we propose a unified-modal SpeechT5 framework that explores the encoder-decoder pre-training for self-supervised speech/text representation learning. The SpeechT5 framework consists of a shared encoder-decoder network and six modal-specific (speech/text) pre/post-nets. After preprocessing the input speech/text through the pre-nets, the shared encoder-decoder network models the sequence-to-sequence transformation, and then the post-nets generate the output in the speech/text modality based on the output of the decoder.
 """
 
 # Split the text into chunks

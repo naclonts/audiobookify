@@ -16,7 +16,7 @@ class Task(db.Model):
     status = db.Column(db.String(20), nullable=False, default='pending')
     pdf_path = db.Column(db.String(200), nullable=False)
     audio_path = db.Column(db.String(200), nullable=True)
-    voice = db.Column(db.String(100), nullable=False, default='default_voice')  # New field
+    voice = db.Column(db.String(100), nullable=False, default='cmu_us_bdl_arctic')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

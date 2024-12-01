@@ -1,63 +1,56 @@
 # backend/app/controllers/voice_manager.py
 
-import os
+import torch
+from datasets import load_dataset
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class VoiceManager:
     """
-    Manages available TTS voices and their corresponding models.
+    Manages available TTS voices and their corresponding embeddings.
     """
 
     def __init__(self):
-        # Directory where voice models are stored
-        self.voices_dir = os.path.join(os.path.dirname(__file__), '..', 'voices')
+        # Load speaker embeddings
+        self.embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+        # Create a mapping of voice names to embedding indices
         self.voices = self.load_available_voices()
 
     def load_available_voices(self):
         """
-        Loads available voices from the voices directory.
-
-        Returns:
-            dict: A dictionary mapping voice names to their model and config paths.
+        Loads available voices and creates a mapping.
         """
-        voices = {}
-        if not os.path.exists(self.voices_dir):
-            os.makedirs(self.voices_dir)
-
-        for voice_name in os.listdir(self.voices_dir):
-            voice_path = os.path.join(self.voices_dir, voice_name)
-            if os.path.isdir(voice_path):
-                model_path = os.path.join(voice_path, 'model.pth')
-                config_path = os.path.join(voice_path, 'config.json')
-                if os.path.exists(model_path) and os.path.exists(config_path):
-                    voices[voice_name] = {
-                        'model_path': model_path,
-                        'config_path': config_path
-                    }
+        # Map voice names to indices in the embeddings_dataset
+        voices = {
+            'cmu_us_bdl_arctic': 7306,
+            'cmu_us_clb_arctic': 7307,
+            'cmu_us_jmk_arctic': 7308,
+            'cmu_us_slt_arctic': 7309,
+            # Add more mappings as needed
+        }
         return voices
 
     def get_available_voices(self):
         """
         Returns a list of available voice names.
-
-        Returns:
-            list: List of voice names.
         """
         return list(self.voices.keys())
 
-    def get_voice_model(self, voice_name):
+    def get_voice_embedding(self, voice_name):
         """
-        Retrieves the model and config paths for a given voice.
+        Retrieves the speaker embedding for a given voice.
 
         Args:
             voice_name (str): The name of the voice.
 
         Returns:
-            tuple: (model_path, config_path)
+            torch.Tensor: The speaker embedding tensor.
 
         Raises:
             ValueError: If the voice is not available.
         """
-        voice = self.voices.get(voice_name)
-        if not voice:
+        if voice_name not in self.voices:
             raise ValueError(f"Voice '{voice_name}' is not available.")
-        return voice['model_path'], voice['config_path']
+        index = self.voices[voice_name]
+        embedding = torch.tensor(self.embeddings_dataset[index]["xvector"]).unsqueeze(0).to(device)
+        return embedding

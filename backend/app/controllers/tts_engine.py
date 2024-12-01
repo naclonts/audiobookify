@@ -1,8 +1,19 @@
-# backend/app/controllers/tts_engine.py
+import torch
+import numpy as np
+import soundfile as sf
+from transformers import SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
+from app.controllers.text_cleaner import split_text
+from app.controllers.voice_manager import VoiceManager
 
-import os
-from TTS.api import TTS
-from .voice_manager import VoiceManager
+# Check if GPU is available and set the device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Load processor and models
+processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts").to(device)
+model = SpeechT5ForTextToSpeech.from_pretrained("microsoft/speecht5_tts").to(device)
+vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan").to(device)
+
+voice_manager = VoiceManager()
 
 def generate_speech(text, voice_name, output_path):
     """
@@ -17,17 +28,31 @@ def generate_speech(text, voice_name, output_path):
         str: The path to the generated audio file.
     """
     try:
-        voice_manager = VoiceManager()
-        tts_model_path, tts_config_path = voice_manager.get_voice_model(voice_name)
+        # Get speaker embedding for the selected voice
+        speaker_embedding = voice_manager.get_voice_embedding(voice_name)
 
-        if not os.path.exists(tts_model_path) or not os.path.exists(tts_config_path):
-            raise ValueError(f"Voice model files not found for voice: {voice_name}")
+        # Normalize and split text
+        text_chunks = split_text(text, max_length=200)
 
-        tts = TTS(model_path=tts_model_path, config_path=tts_config_path)
+        combined_audio = []
+        samplerate = 16000  # Hertz
+        silence = np.zeros(int(0.5 * samplerate), dtype=np.float32)
 
-        # Generate speech and save to output_path
-        tts.tts_to_file(text=text, file_path=output_path)
+        for i, chunk in enumerate(text_chunks):
+            inputs = processor(text=chunk, return_tensors="pt").to(device)
+            with torch.no_grad():
+                speech = model.generate_speech(inputs["input_ids"], speaker_embedding, vocoder=vocoder)
+            combined_audio.append(speech.cpu().numpy())
+            # Add a brief pause between chunks
+            if i < len(text_chunks) - 1:
+                combined_audio.append(silence)
 
+        # Concatenate all audio chunks
+        final_audio = np.concatenate(combined_audio)
+
+        # Save the combined audio to a file
+        sf.write(output_path, final_audio, samplerate=samplerate)
         return output_path
+
     except Exception as e:
         raise RuntimeError(f"Failed to generate speech: {e}")

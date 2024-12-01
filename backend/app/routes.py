@@ -6,7 +6,7 @@ import uuid
 
 from app.models.task_model import db, Task
 from app.utils.file_storage import save_file
-from app.controllers.tasks import process_pdf_task  # Ensure this Celery task is defined
+from app.controllers.tasks import process_pdf_task
 
 api_routes = Blueprint('api_routes', __name__)
 
@@ -43,7 +43,7 @@ def upload_pdf():
             status='pending',
             pdf_path=upload_path,
             audio_path=None,
-            voice=selected_voice  # Ensure Task model has a 'voice' field
+            voice=selected_voice
         )
         db.session.add(task)
         db.session.commit()

@@ -4,6 +4,7 @@ from app.utils.message_queue import make_celery
 from app.controllers import extract_text, clean_text, generate_speech
 from app.models.task_model import db, Task
 from flask import current_app
+import os
 
 celery = make_celery()
 
@@ -12,7 +13,6 @@ def process_pdf_task(task_id):
     try:
         task = Task.query.filter_by(task_id=task_id).first()
         if not task:
-            # Handle invalid task_id
             current_app.logger.error(f"Task {task_id} not found.")
             return
 
@@ -28,7 +28,7 @@ def process_pdf_task(task_id):
         # Generate speech audio using the selected voice
         audio_filename = f"{task_id}_audio.wav"
         audio_path = os.path.join(current_app.config['AUDIO_FOLDER'], audio_filename)
-        generate_speech(cleaned_text, task.voice, audio_path)  # Use task.voice
+        generate_speech(cleaned_text, task.voice, audio_path)
 
         # Update task with audio path and status
         task.audio_path = audio_path
