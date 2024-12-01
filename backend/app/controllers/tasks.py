@@ -1,60 +1,47 @@
-from app.utils.message_queue import make_celery
-from app.controllers import extract_text, clean_text, generate_speech
-from app.models.task_model import db, Task
 from flask import current_app
+from celery import shared_task
+from app.models.task_model import db, Task
+from app.controllers import extract_text, clean_text, generate_speech
 import os
+import logging
 
-# Remove the direct celery initialization
-# celery = make_celery() <- This was the problem
+logger = logging.getLogger(__name__)
 
-# Instead, create a function to initialize celery with the app
-def init_celery(app):
-    celery = make_celery(app)
-    return celery
-
-# The task definition needs to be modified to use current_app
-def get_celery():
-    return current_app.extensions['celery']
-
-# Modify the task decorator to use the celery instance from current_app
-def celery_task():
-    def decorator(f):
-        def wrapper(*args, **kwargs):
-            return get_celery().task(f)(*args, **kwargs)
-        return wrapper
-    return decorator
-
-@celery_task()
+@shared_task(name='process_pdf_task')
 def process_pdf_task(task_id):
+    """Process a PDF file and convert it to audio."""
     try:
+        # Get task from database
         task = Task.query.filter_by(task_id=task_id).first()
         if not task:
-            current_app.logger.error(f"Task {task_id} not found.")
-            return
+            logger.error(f"Task {task_id} not found")
+            return False
 
+        # Update task status
         task.status = 'processing'
         db.session.commit()
+        logger.info(f"Started processing task {task_id}")
 
-        # Extract text from PDF
+        # Process PDF to audio
         raw_text = extract_text(task.pdf_path)
-
-        # Clean the extracted text
         cleaned_text = clean_text(raw_text)
 
-        # Generate speech audio using the selected voice
         audio_filename = f"{task_id}_audio.wav"
         audio_path = os.path.join(current_app.config['AUDIO_FOLDER'], audio_filename)
         generate_speech(cleaned_text, task.voice, audio_path)
 
-        # Update task with audio path and status
+        # Update task status
         task.audio_path = audio_path
         task.status = 'completed'
         db.session.commit()
 
-        current_app.logger.info(f"Task {task_id} completed successfully.")
+        logger.info(f"Task {task_id} completed successfully")
+        return True
 
     except Exception as e:
+        logger.error(f"Error processing task {task_id}: {str(e)}")
         if task:
             task.status = 'failed'
+            task.error_message = str(e)
             db.session.commit()
-        current_app.logger.error(f"Error processing task {task_id}: {e}")
+        return False

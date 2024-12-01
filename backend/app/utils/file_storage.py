@@ -1,6 +1,5 @@
-# backend/app/utils/file_storage.py
-
 import os
+import uuid
 from werkzeug.utils import secure_filename
 from flask import current_app
 
@@ -18,11 +17,15 @@ def save_file(file, folder):
     try:
         filename = secure_filename(file.filename)
         # Generate a unique filename to prevent collisions
-        unique_filename = f"{current_app.config.get('UNIQUE_PREFIX', '')}_{filename}"
-        save_path = os.path.join(current_app.config.get(f'{folder.upper()}_FOLDER'), unique_filename)
-        file.save(save_path)
-        current_app.logger.info(f"File saved to {save_path}")
-        return save_path
+        unique_id = str(uuid.uuid4())[:8]
+        unique_filename = f"{unique_id}_{filename}"
+
+        file_path = os.path.join(folder, unique_filename)
+        file.save(file_path)
+
+        current_app.logger.info(f"File saved to {file_path}")
+        return file_path
+
     except Exception as e:
         current_app.logger.error(f"Error saving file: {e}")
         raise

@@ -17,7 +17,6 @@ def create_app():
     app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UNIQUE_PREFIX'] = 'unique'
 
     with app.app_context():
         # Initialize extensions within context

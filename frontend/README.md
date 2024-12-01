@@ -22,7 +22,7 @@ This directory contains the frontend application for the **PDF to Speech Convert
 
 ## Prerequisites
 
-- **Node.js 14+**
+- **Node.js 20+**
 - **npm** (comes with Node.js)
 
 ---

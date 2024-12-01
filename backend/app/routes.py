@@ -32,8 +32,8 @@ def upload_pdf():
         # Generate a unique task ID
         task_id = str(uuid.uuid4())
 
-        # Save the uploaded PDF with task_id as prefix
-        upload_path = save_file(file, 'pdfs', unique_prefix=task_id)
+        # Use the configured upload folder
+        upload_path = save_file(file, current_app.config['UPLOAD_FOLDER'])
 
         current_app.logger.info(f"PDF uploaded and saved to {upload_path}")
 
