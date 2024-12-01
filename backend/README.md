@@ -93,7 +93,7 @@ Ensure that `app/main.py` reads the configuration from environment variables or 
 ## Running the Backend Server
 
 ```bash
-python run.py
+python main.py
 ```
 
 The backend server will start at `http://localhost:5000/`.

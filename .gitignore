@@ -1,3 +1,8 @@
 venv/
 node_modules/
 *.wav
+.env
+__pycache__/
+backend/uploads/
+backend/logs/
+backend/instance/

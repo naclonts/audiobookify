@@ -3,7 +3,7 @@
 import re
 import unicodedata
 
-def normalize_text(text):
+def clean_text(text):
     """
     Normalize special characters in the text to ensure consistent processing.
     """
@@ -38,9 +38,6 @@ def split_text(text, max_length=598):
     Split the text into chunks where each chunk contains multiple sentences
     without exceeding the max_length.
     """
-    # Normalize the text
-    text = normalize_text(text)
-
     # Split the text into sentences
     sentence_endings = re.compile(r'(?<=[.!?])\s+')
     sentences = sentence_endings.split(text)

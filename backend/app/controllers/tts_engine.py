@@ -9,13 +9,13 @@ from app.controllers.voice_manager import VoiceManager
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load processor and models
-processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts").to(device)
+processor = SpeechT5Processor.from_pretrained("microsoft/speecht5_tts")
 model = SpeechT5ForTextToSpeech.from_pretrained("microsoft/speecht5_tts").to(device)
 vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan").to(device)
 
 voice_manager = VoiceManager()
 
-def generate_speech(text, voice_name, output_path):
+def generate_speech(text: str, voice_name: str, output_path: str) -> str:
     """
     Generates speech audio from text using the specified voice.
 

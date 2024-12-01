@@ -1,14 +1,30 @@
-# backend/app/controllers/tasks.py
-
 from app.utils.message_queue import make_celery
 from app.controllers import extract_text, clean_text, generate_speech
 from app.models.task_model import db, Task
 from flask import current_app
 import os
 
-celery = make_celery()
+# Remove the direct celery initialization
+# celery = make_celery() <- This was the problem
 
-@celery.task()
+# Instead, create a function to initialize celery with the app
+def init_celery(app):
+    celery = make_celery(app)
+    return celery
+
+# The task definition needs to be modified to use current_app
+def get_celery():
+    return current_app.extensions['celery']
+
+# Modify the task decorator to use the celery instance from current_app
+def celery_task():
+    def decorator(f):
+        def wrapper(*args, **kwargs):
+            return get_celery().task(f)(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@celery_task()
 def process_pdf_task(task_id):
     try:
         task = Task.query.filter_by(task_id=task_id).first()

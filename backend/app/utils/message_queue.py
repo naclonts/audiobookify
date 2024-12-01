@@ -3,7 +3,7 @@
 from celery import Celery
 from flask import current_app
 
-def make_celery(app=None):
+def make_celery(app):
     """
     Create a Celery object and tie it to the Flask app's config.
 
@@ -13,8 +13,6 @@ def make_celery(app=None):
     Returns:
         Celery: The configured Celery instance.
     """
-    app = app or current_app
-
     celery = Celery(
         app.import_name,
         broker=app.config.get('CELERY_BROKER_URL', 'redis://localhost:6379/0'),
