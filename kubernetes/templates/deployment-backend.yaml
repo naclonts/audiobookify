@@ -1,0 +1,30 @@
+# yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: audiobookify
+    tier: backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: audiobookify
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: audiobookify
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image }}"
+          ports:
+            - containerPort: {{ .Values.backend.service.port }}
+          env:
+            - name: CELERY_BROKER_URL
+              value: "{{ .Values.env.CELERY_BROKER_URL }}"
+            - name: CELERY_RESULT_BACKEND
+              value: "{{ .Values.env.CELERY_RESULT_BACKEND }}"

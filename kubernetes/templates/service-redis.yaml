@@ -1,0 +1,16 @@
+# yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  labels:
+    app: audiobookify
+    tier: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.redis.service.port }}
+      targetPort: {{ .Values.redis.service.port }}
+  selector:
+    app: audiobookify
+    tier: redis

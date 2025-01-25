@@ -1,0 +1,10 @@
+# yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  labels:
+    app: audiobookify
+data:
+  REACT_APP_API_BASE_URL: "{{ .Values.env.REACT_APP_API_BASE_URL }}"
+  FLASK_ENV: "{{ .Values.env.FLASK_ENV }}"

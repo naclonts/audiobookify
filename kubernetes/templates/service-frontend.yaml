@@ -1,0 +1,16 @@
+# yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: audiobookify
+    tier: frontend
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.frontend.service.port }}
+  selector:
+    app: audiobookify
+    tier: frontend

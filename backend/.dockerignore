@@ -1,0 +1,18 @@
+# Exclude virtual environments
+venv/
+env/
+# Exclude node modules
+node_modules/
+# Exclude datasets or large files
+data/
+datasets/
+uploads/
+# Exclude logs
+logs/
+# Exclude compiled Python files
+__pycache__/
+*.pyc
+# Exclude other unnecessary files
+*.wav
+*.mp3
+.env

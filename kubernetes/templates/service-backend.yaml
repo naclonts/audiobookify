@@ -1,0 +1,16 @@
+# yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: audiobookify
+    tier: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.port }}
+  selector:
+    app: audiobookify
+    tier: backend

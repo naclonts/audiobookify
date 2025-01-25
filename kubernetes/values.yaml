@@ -1,0 +1,38 @@
+replicaCount: 2
+
+image:
+  repository: localuser/audiobookify
+  pullPolicy: IfNotPresent
+  tag: latest
+
+backend:
+  image: localuser/backend:latest
+  service:
+    port: 5000
+  replicas: 2
+
+frontend:
+  image: localuser/frontend:latest
+  service:
+    port: 3000
+  replicas: 2
+
+worker:
+  image: localuser/worker:latest
+  replicas: 2
+
+redis:
+  image: redis:7.0
+  service:
+    port: 6379
+  replicas: 1
+
+service:
+  type: LoadBalancer
+  port: 80
+
+env:
+  CELERY_BROKER_URL: "redis://redis-service:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis-service:6379/0"
+  REACT_APP_API_BASE_URL: "http://backend-service:5000/api"
+  FLASK_ENV: "production"

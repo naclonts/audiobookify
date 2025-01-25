@@ -1,0 +1,28 @@
+# yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: audiobookify
+    tier: worker
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      app: audiobookify
+      tier: worker
+  template:
+    metadata:
+      labels:
+        app: audiobookify
+        tier: worker
+    spec:
+      containers:
+        - name: worker
+          image: "{{ .Values.worker.image }}"
+          env:
+            - name: CELERY_BROKER_URL
+              value: "{{ .Values.env.CELERY_BROKER_URL }}"
+            - name: CELERY_RESULT_BACKEND
+              value: "{{ .Values.env.CELERY_RESULT_BACKEND }}"

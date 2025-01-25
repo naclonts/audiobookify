@@ -1,0 +1,25 @@
+# yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: audiobookify
+    tier: redis
+spec:
+  replicas: {{ .Values.redis.replicas }}
+  selector:
+    matchLabels:
+      app: audiobookify
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app: audiobookify
+        tier: redis
+    spec:
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.image }}"
+          ports:
+            - containerPort: {{ .Values.redis.service.port }}

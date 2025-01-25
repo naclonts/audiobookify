@@ -1,0 +1,36 @@
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install prerequisites
+RUN apt-get update && \
+    apt-get install -y wget gnupg ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add NVIDIA repository GPG key
+RUN wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub | apt-key add -
+
+# Add Ubuntu repository GPG keys
+RUN wget -qO - https://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x3B4FE6ACC0B21F32 | apt-key add -
+RUN wget -qO - https://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x871920D1991BC93C | apt-key add -
+
+# Update package lists
+RUN apt-get update
+
+# Install Python and system dependencies
+RUN apt-get install -y python3.11 python3-pip build-essential libsndfile1 ffmpeg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install dependencies with GPU support
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir torch torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["celery", "-A", "app.controllers.tasks.celery", "worker", "--loglevel=info"]
