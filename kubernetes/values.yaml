@@ -1,25 +1,24 @@
-replicaCount: 2
-
-image:
-  repository: localuser/audiobookify
-  pullPolicy: IfNotPresent
-  tag: latest
-
 backend:
-  image: localuser/backend:latest
+  image: nathanclonts/audiobookify:backend-v0.0.1
   service:
     port: 5000
   replicas: 2
 
 frontend:
-  image: localuser/frontend:latest
+  image: nathanclonts/audiobookify:frontend-v0.0.1
   service:
     port: 3000
   replicas: 2
 
 worker:
-  image: localuser/worker:latest
+  image: nathanclonts/audiobookify:worker-v0.0.1
   replicas: 2
+
+postgres:
+  image: postgres:15
+  service:
+    port: 5432
+  replicas: 1
 
 redis:
   image: redis:7.0

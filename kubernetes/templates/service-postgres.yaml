@@ -4,6 +4,6 @@ metadata:
   name: postgres-service
 spec:
   ports:
-    - port: 5432
+    - port: {{ .Values.postgres.service.port }}
   selector:
     app: postgres

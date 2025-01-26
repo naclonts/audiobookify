@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-init
+  namespace: audiobookify
   annotations:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "-1"
