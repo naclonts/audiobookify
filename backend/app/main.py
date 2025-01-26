@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -15,7 +17,14 @@ def create_app():
     app.config['LOG_DIR'] = 'logs'
     app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
     app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
+
+    # Update database configuration for PostgreSQL
+    print('DB URL: ',os.getenv('DATABASE_URL'))
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+        'DATABASE_URL',
+        # default local testing URL
+        'postgresql://postgres:postgres@localhost:5432/audiobookify'
+    )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     with app.app_context():
@@ -34,7 +43,6 @@ def create_app():
         app.register_blueprint(api_routes, url_prefix='/api')
 
         # Create directories
-        import os
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         os.makedirs(app.config['AUDIO_FOLDER'], exist_ok=True)
         os.makedirs(app.config['LOG_DIR'], exist_ok=True)

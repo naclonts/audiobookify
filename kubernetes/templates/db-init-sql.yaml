@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-sql
+  namespace: pdf-to-speech
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS tasks (
+      id SERIAL PRIMARY KEY,
+      task_id VARCHAR(50) UNIQUE NOT NULL,
+      status VARCHAR(20) NOT NULL DEFAULT 'pending',
+      file_path VARCHAR(500) NOT NULL,
+      audio_path VARCHAR(500),
+      voice VARCHAR(100) NOT NULL DEFAULT 'cmu_us_bdl_arctic',
+      error_message TEXT,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_task_id ON tasks(task_id);

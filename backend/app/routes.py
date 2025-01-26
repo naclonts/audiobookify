@@ -41,7 +41,7 @@ def upload_pdf():
         task = Task(
             task_id=task_id,
             status='pending',
-            pdf_path=upload_path,
+            file_path=upload_path,
             audio_path=None,
             voice=selected_voice
         )

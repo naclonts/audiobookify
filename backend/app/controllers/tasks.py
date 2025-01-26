@@ -23,7 +23,7 @@ def process_pdf_task(task_id):
         logger.info(f"Started processing task {task_id}")
 
         # Process PDF to audio
-        raw_text = extract_text(task.pdf_path)
+        raw_text = extract_text(task.file_path)
         cleaned_text = clean_text(raw_text)
 
         audio_filename = f"{task_id}_audio.wav"
