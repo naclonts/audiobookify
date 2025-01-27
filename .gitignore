@@ -6,3 +6,4 @@ __pycache__/
 backend/uploads/
 backend/logs/
 backend/instance/
+.log.md
