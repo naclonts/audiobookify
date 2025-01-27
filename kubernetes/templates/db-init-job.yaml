@@ -8,7 +8,7 @@ spec:
       containers:
       - name: db-init
         image: postgres:15
-        command: ['psql', '-h', 'postgres-service', '-U', 'postgres', '-d', 'audiobookify', '-f', '/docker-entrypoint-initdb.d/init.sql']
+        command: ['psql', '-h', 'postgres-service', '-U', 'postgres', '-d', 'audiobookify', '-f', '/sql-initialization/init.sql']
         env:
         - name: PGPASSWORD
           value: postgres

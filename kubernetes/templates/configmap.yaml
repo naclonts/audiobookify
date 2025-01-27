@@ -8,3 +8,5 @@ data:
   REACT_APP_API_BASE_URL: "{{ .Values.env.REACT_APP_API_BASE_URL }}"
   FLASK_ENV: "{{ .Values.env.FLASK_ENV }}"
   DATABASE_URL: "{{ .Values.env.DATABASE_URL }}"
+  CELERY_BROKER_URL: "{{ .Values.env.CELERY_BROKER_URL }}"
+  CELERY_RESULT_BACKEND: "{{ .Values.env.CELERY_RESULT_BACKEND }}"
