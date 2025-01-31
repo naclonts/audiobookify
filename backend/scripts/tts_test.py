@@ -9,7 +9,7 @@ from app.controllers.tts_engine import generate_speech
 def main():
     sample_text = "This is a sample text to test the text-to-speech functionality."
     voice = "cmu_us_bdl_arctic"  # Specify the voice you want to use
-    output_file = "output_audio.wav"
+    output_file = "uploads/audio/output_audio.wav"
 
     try:
         generate_speech(sample_text, voice, output_file)

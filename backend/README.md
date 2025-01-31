@@ -107,10 +107,12 @@ The backend server will start at `http://localhost:5000/`.
 In a separate terminal window (with the virtual environment activated), run:
 
 ```bash
-celery -A app.worker.celery worker --loglevel=INFO
+celery -A app.worker.celery worker --pool=threads --loglevel=INFO
 ```
 
 This starts the Celery worker to process tasks asynchronously.
+
+The `--pool=threads` flag is necessary as CUDA doesn't work with Celery's default prefork pooling.
 
 ---
 
