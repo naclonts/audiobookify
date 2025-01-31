@@ -31,6 +31,7 @@ def process_pdf_task(task_id):
         logger.info(f"Cleaning extracted text for task {task_id}")
         cleaned_text = clean_text(raw_text)
         logger.info(f"Text cleaning completed for task {task_id}")
+        logger.info(f"Cleaned text: {cleaned_text}")
 
         # Generate speech from cleaned text
         audio_filename = f"{task_id}_audio.wav"
