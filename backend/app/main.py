@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 
 from flask import Flask
@@ -9,17 +10,20 @@ from app.utils.message_queue import make_celery
 from app.models.task_model import db  # Import the SQLAlchemy instance
 
 def create_app():
+    load_dotenv()
+
     app = Flask(__name__)
 
     # Load configuration first
     app.config['UPLOAD_FOLDER'] = 'uploads/pdfs'
     app.config['AUDIO_FOLDER'] = 'uploads/audio'
     app.config['LOG_DIR'] = 'logs'
-    app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-    app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+    app.config['CELERY_BROKER_URL'] = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+    app.config['CELERY_RESULT_BACKEND'] = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+    print(app.config['CELERY_BROKER_URL'])
+    print(app.config['CELERY_RESULT_BACKEND'])
 
     # Update database configuration for PostgreSQL
-    print('DB URL: ',os.getenv('DATABASE_URL'))
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
         'DATABASE_URL',
         # default local testing URL
