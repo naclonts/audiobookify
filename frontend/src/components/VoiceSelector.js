@@ -11,7 +11,6 @@ function VoiceSelector({ selectedVoice, setSelectedVoice }) {
     const fetchVoices = async () => {
       try {
         const response = await getVoices();
-        console.log({ response })
         setVoices(response.data.voices);
       } catch (err) {
         setError('Failed to load available voices.');

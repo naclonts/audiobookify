@@ -98,7 +98,6 @@ def download_audio(task_id):
 
         directory = os.path.dirname(task.audio_path)
         filename = os.path.basename(task.audio_path)
-        print(directory, filename)
         return send_from_directory(directory, filename, as_attachment=True)
 
     except Exception as e:
