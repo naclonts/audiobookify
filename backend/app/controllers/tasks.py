@@ -35,7 +35,7 @@ def process_pdf_task(task_id):
 
         # Generate speech from cleaned text
         audio_filename = f"{task_id}_audio.wav"
-        audio_path = os.path.join(current_app.config['AUDIO_FOLDER'], audio_filename)
+        audio_path = os.path.abspath(os.path.join(current_app.config['AUDIO_FOLDER'], audio_filename))
         logger.info(f"Generating speech for task {task_id} with voice {task.voice}")
         generate_speech(cleaned_text, task.voice, audio_path)
         logger.info(f"Speech generation completed for task {task_id}")

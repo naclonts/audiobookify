@@ -84,6 +84,7 @@ def check_status(task_id):
         current_app.logger.error(f"Error checking status for task {task_id}: {e}")
         return jsonify({'error': 'Failed to retrieve task status.'}), 500
 
+# TODO: Serve files using Nginx instead of Flask in production
 @api_routes.route('/download/<task_id>', methods=['GET'])
 def download_audio(task_id):
     try:
@@ -97,6 +98,7 @@ def download_audio(task_id):
 
         directory = os.path.dirname(task.audio_path)
         filename = os.path.basename(task.audio_path)
+        print(directory, filename)
         return send_from_directory(directory, filename, as_attachment=True)
 
     except Exception as e:
