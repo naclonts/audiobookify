@@ -1,5 +1,3 @@
-// frontend/src/components/AudioPlayer.js
-
 import React, { useEffect, useState } from 'react';
 import { downloadAudio } from '../services/api';
 
@@ -30,7 +28,7 @@ function AudioPlayer({ taskId }) {
         window.URL.revokeObjectURL(audioUrl);
       }
     };
-  }, [taskId, audioUrl]);
+  }, [taskId]);
 
   const handleDownload = () => {
     if (!audioUrl) return;
