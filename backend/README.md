@@ -107,7 +107,7 @@ The backend server will start at `http://localhost:5000/`.
 In a separate terminal window (with the virtual environment activated), run:
 
 ```bash
-celery -A app.controllers.tasks.celery worker --loglevel=info
+celery -A app.worker.celery worker --loglevel=INFO
 ```
 
 This starts the Celery worker to process tasks asynchronously.
