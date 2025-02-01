@@ -23,6 +23,8 @@ spec:
           volumeMounts:
             - name: audio-storage
               mountPath: /audio
+            - name: text-storage
+              mountPath: /uploads/pdfs
           env:
             - name: CELERY_BROKER_URL
               value: "{{ .Values.env.CELERY_BROKER_URL }}"
@@ -34,3 +36,6 @@ spec:
         - name: audio-storage
           persistentVolumeClaim:
             claimName: audio-files-local-pvc
+        - name: text-storage
+          persistentVolumeClaim:
+            claimName: text-files-local-pvc

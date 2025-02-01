@@ -26,6 +26,8 @@ spec:
           volumes:
             - name: audio-storage
               mountPath: /audio
+            - name: text-storage
+              mountPath: /uploads/pdfs
           envFrom:
             - configMapRef:
                 name: app-config
@@ -33,3 +35,6 @@ spec:
         - name: audio-storage
           persistentVolumeClaim:
             claimName: audio-files-local-pvc
+        - name: text-storage
+          persistentVolumeClaim:
+            claimName: text-files-local-pvc

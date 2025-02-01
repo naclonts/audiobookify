@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: audio-files-local-pvc
+  name: text-files-local-pvc
 spec:
   storageClassName: ""
-  volumeName: audio-files-local-pv
+  volumeName: text-files-local-pv
   accessModes:
     - ReadWriteOnce
   resources:
