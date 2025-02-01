@@ -1,5 +1,5 @@
 backend:
-  image: nathanclonts/audiobookify:backend-v0.0.3
+  image: nathanclonts/audiobookify:backend-v0.0.4
   service:
     port: 5000
   replicas: 1
@@ -11,7 +11,7 @@ frontend:
   replicas: 1
 
 worker:
-  image: nathanclonts/audiobookify:worker-v0.0.3
+  image: nathanclonts/audiobookify:worker-v0.0.4
   replicas: 1
 
 postgres:
