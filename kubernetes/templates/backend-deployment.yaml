@@ -23,7 +23,7 @@ spec:
           image: "{{ .Values.backend.image }}"
           ports:
             - containerPort: {{ .Values.backend.service.port }}
-          volumes:
+          volumeMounts:
             - name: audio-storage
               mountPath: /audio
             - name: text-storage
