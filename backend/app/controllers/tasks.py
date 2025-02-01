@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 @shared_task(name='process_pdf_task')
 def process_pdf_task(task_id):
     """Process a PDF file and convert it to audio."""
+    task = None
+
     try:
         # Get task from database
         task = Task.query.filter_by(task_id=task_id).first()
