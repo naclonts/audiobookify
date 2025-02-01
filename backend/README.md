@@ -75,10 +75,6 @@ Create a `.env` file in the `backend/` directory (optional) and set the followin
 ```bash
 # .env
 FLASK_ENV=development
-SECRET_KEY=your_secret_key
-UPLOAD_FOLDER=uploads/pdfs
-AUDIO_FOLDER=uploads/audios
-LOG_DIR=logs
 CELERY_BROKER_URL=redis://localhost:6379/0
 CELERY_RESULT_BACKEND=redis://localhost:6379/0
 SQLALCHEMY_DATABASE_URI=sqlite:///tasks.db

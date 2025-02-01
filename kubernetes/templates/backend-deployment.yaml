@@ -23,6 +23,13 @@ spec:
           image: "{{ .Values.backend.image }}"
           ports:
             - containerPort: {{ .Values.backend.service.port }}
+          volumes:
+            - name: audio-storage
+              mountPath: /audio
           envFrom:
             - configMapRef:
                 name: app-config
+      volumes:
+        - name: audio-storage
+          persistentVolumeClaim:
+            claimName: audio-files-local-pvc
