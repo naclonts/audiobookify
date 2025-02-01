@@ -15,7 +15,7 @@ def create_app():
     app = Flask(__name__)
 
     # Load configuration first
-    app.config['UPLOAD_FOLDER'] = 'uploads/pdfs'
+    app.config['UPLOAD_FOLDER'] = '/text'
     app.config['AUDIO_FOLDER'] = '/audio'
     app.config['LOG_DIR'] = 'logs'
     app.config['CELERY_BROKER_URL'] = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')

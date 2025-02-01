@@ -24,7 +24,7 @@ spec:
             - name: audio-storage
               mountPath: /audio
             - name: text-storage
-              mountPath: /uploads/pdfs
+              mountPath: /text
           env:
             - name: CELERY_BROKER_URL
               value: "{{ .Values.env.CELERY_BROKER_URL }}"

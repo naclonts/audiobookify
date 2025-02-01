@@ -9,7 +9,7 @@ def save_file(file, folder):
 
     Args:
         file (werkzeug.datastructures.FileStorage): The uploaded file.
-        folder (str): The folder to save the file ('pdfs' or 'audios').
+        folder (str): The folder to save the file ('UPLOAD' or 'AUDIO').
 
     Returns:
         str: The path to the saved file.
@@ -36,7 +36,7 @@ def get_file_path(filename, folder):
 
     Args:
         filename (str): The name of the file.
-        folder (str): The folder where the file is stored ('pdfs' or 'audios').
+        folder (str): The folder where the file is stored ('UPLOAD' or 'AUDIO').
 
     Returns:
         str: The full path to the file.

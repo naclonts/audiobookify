@@ -1,3 +1,4 @@
+# This volume stores generated audio files.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
