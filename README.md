@@ -1,5 +1,7 @@
 
-🏗️ This is a work in progress and not fully functioning yet! 🏗️
+🏗️ This documentation is a work in progress! 🏗️
+
+Read my project notes about this app at: https://nathanclonts.com/text-to-audiobook-app-with-kubernetes/
 
 ---
 
