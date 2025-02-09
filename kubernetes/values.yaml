@@ -12,7 +12,7 @@ frontend:
 
 worker:
   image: nathanclonts/audiobookify:worker-v0.0.4
-  replicas: 1
+  replicas: 2
 
 postgres:
   image: postgres:15
