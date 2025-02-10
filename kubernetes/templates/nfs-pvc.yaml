@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nfs-pvc
+  name: shared-nfs-pvc
 spec:
   storageClassName: ""
   volumeName: nfs-pv
