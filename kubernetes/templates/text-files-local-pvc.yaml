@@ -1,0 +1,13 @@
+# This volume stores text / PDF files that the user has uploaded.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: text-files-local-pvc
+spec:
+  storageClassName: ""
+  volumeName: text-files-local-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
