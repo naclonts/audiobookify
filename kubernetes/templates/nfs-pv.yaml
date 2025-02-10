@@ -10,5 +10,5 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server
     path: /exports
