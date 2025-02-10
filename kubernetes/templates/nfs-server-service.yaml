@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-server
+spec:
+  clusterIP: None
+  selector:
+    app: nfs-server
+  ports:
+    - name: nfs
+      port: 2049
+      targetPort: 2049
+    - name: rpcbind
+      port: 111
+      targetPort: 111

@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: audio-files-local-pvc
+  name: shared-nfs-pvc
 spec:
   storageClassName: ""
-  volumeName: audio-files-local-pv
+  volumeName: nfs-pv
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 4Gi
+      storage: 8Gi

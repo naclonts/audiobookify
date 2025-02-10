@@ -23,8 +23,10 @@ spec:
           volumeMounts:
             - name: audio-storage
               mountPath: /audio
+              subPath: audio_files
             - name: text-storage
               mountPath: /text
+              subPath: text_files
           env:
             - name: CELERY_BROKER_URL
               value: "{{ .Values.env.CELERY_BROKER_URL }}"
@@ -35,7 +37,7 @@ spec:
       volumes:
         - name: audio-storage
           persistentVolumeClaim:
-            claimName: audio-files-local-pvc
+            claimName: nfs-pvc
         - name: text-storage
           persistentVolumeClaim:
-            claimName: text-files-local-pvc
+            claimName: nfs-pvc
